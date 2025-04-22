@@ -10,16 +10,18 @@ import UIKit
 
 /// Header for each row (every hour) in collectionView (Supplementary View)
 open class JZRowHeader: UICollectionReusableView {
-
+    
     public var lblTime = UILabel()
     public var dateFormatter = DateFormatter()
-
+    public var formatTime = "HH:mm"
+    private var isIpad = UIDevice.current.userInterfaceIdiom == .pad
+    
     public override init(frame: CGRect) {
         super.init(frame: .zero)
         setupLayout()
         setupBasic()
     }
-
+    
     private func setupLayout() {
         self.addSubview(lblTime)
         // This one is used to support iPhone X Landscape state because of notch status bar
@@ -27,21 +29,24 @@ open class JZRowHeader: UICollectionReusableView {
         // If you want to change rowHeaderWidth and font size, you can change the trailing value to make it horizontally center in normal state, but keep the trailing anchor
         lblTime.setAnchorCenterVerticallyTo(view: self, trailingAnchor: (self.trailingAnchor, -5))
     }
-
+    
     open func setupBasic() {
         // Hide all content when colum header height equals 0
         self.clipsToBounds = true
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.dateFormat = formatTime
         lblTime.textColor = JZWeekViewColors.rowHeaderTime
-        lblTime.font = UIFont.systemFont(ofSize: 12)
+        lblTime.font = UIFont.systemFont(ofSize: (formatTime == "HH:mm") ? 13 : 11)
     }
-
+    
     public func updateView(date: Date) {
+        dateFormatter.dateFormat = formatTime
         lblTime.text = dateFormatter.string(from: date)
+        lblTime.font = UIFont.systemFont(ofSize: (formatTime == "HH:mm") ? 13 : 11)
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    
 }
